@@ -1,0 +1,68 @@
+
+services:
+
+  # ---------- BACKEND (PHP-FPM + Yii2) ----------
+  php:
+    build:
+      context: ./backend
+    container_name: yii-php
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      - db
+
+  # ---------- NGINX ----------
+  nginx:
+    image: nginx:latest
+    container_name: yii-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+
+  # ---------- REACT FRONTEND ----------
+  react:
+    build: 
+      context: ./frontend
+    container_name: react-app
+    ports:
+      - "5173:5173" # оступ до Vite через браузер на localhost:5173 
+    volumes: 
+      - ./frontend:/app # синхронізація коду між ПК та контейнером
+      - /app/node_modules # захищає Linux node_modules від Windows
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"] # запуск Vite на 0.0.0.0, щоб Docker міг показати його ззовні
+
+  # ---------- DATABASE ----------
+  db:
+    image: mysql:latest
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # ---------- phpMyAdmin ----------
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - db
+
+volumes:
+  db_data:
