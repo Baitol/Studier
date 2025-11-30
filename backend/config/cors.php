@@ -17,7 +17,7 @@ return [
 
     'allowed_methods' => ['*'], // allowed_methods — дозволені HTTP-методи (* = всі).
 
-    'allowed_origins' => explode(',', env('CORS_ALLOWED_ORIGINS', 'http://localhost:5173')), // allowed_origins — список фронтенд-доменів, яким дозволено робити запити.
+    'allowed_origins' => explode(',', env('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173')), // allowed_origins — список фронтенд-доменів, яким дозволено робити запити.
 
     'allowed_origins_patterns' => [], 
 
@@ -27,6 +27,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => env('CORS_SUPPORTS_CREDENTIALS', true), // supports_credentials — чи можна відправляти cookie/credentials (має бути true для Sanctum).
+    'supports_credentials' => true, // supports_credentials — чи можна відправляти cookie/credentials (має бути true для Sanctum).
 
 ];
