@@ -45,12 +45,23 @@ class AuthController extends Controller
         ];
     }
 
+    public function getUser(Request $request)
+    {
+        $user = $request->user();
+
+        $permissions = $user->getAllPermissions(); // ← тут всі пермішени
+
+        return response()->json([
+            'user' => $user,
+            'permissions' => $permissions,
+        ]);
+    }
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
         return [
-                'message' => "User is logout"
-            ];
+            'message' => "User is logout"
+        ];
     }
 }
 
