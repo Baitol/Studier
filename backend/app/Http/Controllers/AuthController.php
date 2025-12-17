@@ -37,7 +37,7 @@ class AuthController extends Controller
             ];
         }
 
-        $token = $user->createToken($user->name);
+        $token = $user->createToken($user->first_name);
 
         return [
             'user' => $user,
@@ -49,7 +49,7 @@ class AuthController extends Controller
     {
         $user = $request->user();
 
-        $permissions = $user->getAllPermissions(); // ← тут всі пермішени
+        $permissions = $user->getAllPermissions();
 
         return response()->json([
             'user' => $user,
