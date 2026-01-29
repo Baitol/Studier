@@ -14,6 +14,7 @@ import {
   PlugInIcon,
   TableIcon,
   UserCircleIcon,
+  PencilIcon
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
@@ -36,6 +37,29 @@ const navItems: NavItem[] = [
     icon: <ListIcon />,
     path: "/flow",
     // subItems: [{ name: "Flow", path: "/flow", pro: false }],
+  },
+  {
+    name: "Admin",
+    icon: <PencilIcon />,
+    
+    subItems: 
+    [
+      { 
+        name: "Roles & Permissions", 
+        path: "/admin/roles", 
+        pro: false 
+      },
+      { 
+        name: "User Management", 
+        path: "/admin/users", 
+        pro: false 
+      },
+      { 
+        name: "System Settings", 
+        path: "/admin/settings", 
+        pro: false 
+      }
+    ],
   },
 
 ];

@@ -8,8 +8,21 @@ class RoleService
 {
     public function index()
     {
-        $roles = Role::with('permissions')->get();
-        return $roles;
+        $roles = Role::query()
+            ->select('id', 'name', 'status_id')
+            ->with([
+                'permissions:id,name',
+                'status:id,name,color'
+            ])
+            ->get();
+
+        $permissions = Permission::select('id', 'name')->get();
+
+        $data = [
+            'roles' => $roles,
+            'permissions' => $permissions
+        ];
+        return $data;
     }
 
     public function show($name, $guardName = 'web')
@@ -28,10 +41,10 @@ class RoleService
         $fields = $request->validate([
             'name' => 'required|unique:roles|string|max:255',
             'permissions' => 'sometimes|array',
-            'permissions.*' => 'string|exists:permissions,name',
+            'permissions.*' => 'integer|exists:permissions,id',
         ]);
-        $role = Role::firstOrCreate(['name' => $fields->name, 'guard_name' => 'web']);
-        $role->givePermissionTo($fields->permissions);
+        $role = Role::firstOrCreate(['name' => $fields['name'], 'guard_name' => 'web', 'status_id' => 3,]);
+        $role->givePermissionTo($fields['permissions']);
         return [
             'roleId' => $role->id,
         ];
@@ -48,14 +61,19 @@ class RoleService
         $fields = $request->validate([
             'name' => 'sometimes|string|max:255|min:3|unique:roles,name,' . $id,
             'permissions' => 'sometimes|array',
-            'permissions.*' => 'string|exists:permissions,name',
+            'statusId' => 'required|integer|exists:role_statuses,id',
+            'permissions.*' => 'integer|exists:permissions,id',
         ]);
 
         if (isset($fields['name']) && $fields['name'] !== $role->name) {
             $role->update(['name' => $fields['name']]);
         }
+        if (isset($fields['statusId']) && $fields['statusId'] !== $role->statusId) {
+            $role->update(['status_id' => $fields['statusId']]);
+        }
         if (isset($fields['permissions'])) {
-            $role->syncPermissions($fields['permissions']);
+            $permissions = Permission::whereIn('id', $fields['permissions'])->pluck('name');
+            $role->syncPermissions($permissions);
         }
         return [
             'roleId' => $role->id,

@@ -17,19 +17,31 @@ import FormElements from "./pages/Forms/FormElements";
 import Blank from "./pages/Blank";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
-import  ProtectedRoute  from "./components/utils/ProtectedRoute";
-import Flow from "./pages/StudieFlow/Flow"
+import ProtectedRoute from "./components/utils/ProtectedRoute";
+import Flow from "./pages/StudieFlow/Flow";
+
+
+import UsersManagement from "./pages/Admin/UsersManagement";
+import RolesManagement from "./pages/Admin/RolesManagement"
+import SystemSettings from "./pages/Admin/SystemSettings";
 export default function App() {
   return (
     <>
       <Router>
         <ScrollToTop />
         <Routes>
-          
+
           {/* Dashboard Layout */}
-          <Route element={<ProtectedRoute/>}>
+          <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="/flow" element={<Flow />} />
+
+            <Route path="/admin">
+              <Route path="users" element={<UsersManagement />} />
+              <Route path="roles" element={<RolesManagement />} />
+              <Route path="settings" element={<SystemSettings />} />
+            </Route>
+
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
