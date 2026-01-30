@@ -10,10 +10,12 @@ class RoleService
     {
         $roles = Role::query()
             ->select('id', 'name', 'status_id')
+            ->where('is_deleted', 0)
             ->with([
                 'permissions:id,name',
                 'status:id,name,color'
             ])
+            
             ->get();
 
         $permissions = Permission::select('id', 'name')->get();

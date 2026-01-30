@@ -1,4 +1,4 @@
-import { Role } from "../../types/role";
+import { Role } from "types/role";
 
 function getRandomMutedColor() {
     const hue = Math.floor(Math.random() * 360); // випадковий тон
@@ -15,6 +15,7 @@ interface RoleCardProps {
 
 export default function RoleCard({role, onEdit }: RoleCardProps) {
     const bgColor = getRandomMutedColor();
+    // role.status.color = "text-red-600";
     return (
         <div style={{ backgroundColor: bgColor }} onClick={onEdit}
             className="bg-white shadow-md rounded-lg p-6 flex flex-col items-center justify-center hover:shadow-xl transition-shadow cursor-pointer">
